@@ -1,0 +1,62 @@
+* Core package initialization
+
+#+name: init-core-package
+#+begin_src emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives
+	       '("melpa" . "https://melpa.org/packages/"))
+
+  (unless package-archive-contents
+    (package-refresh-contents))
+#+end_src
+
+I am going to be using ~use-package~ to install _all_ packages. It
+will likely be used for package configuration as well.
+#+name: init-use-package
+#+begin_src emacs-lisp
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+#+end_src
+
+* Core configuration (better defaults)
+
+These section will contain (hopefully) all changes that I make to
+/default/ emacs to make it feel cozier.
+
+#+better-defaults
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+I am going to default ~fringe-mode~ to off because I am not yet
+putting it to use. It does seem interesting, and I will probably
+enable it when I find a better use for it.
+#+begin_src emacs-lisp
+  (fringe-mode -1)
+#+end_src
+
+#+begin_src emacs-lisp
+  (electric-pair-mode 1)
+  (fido-mode 1)
+#+end_src
+
+* Key bindings
+
+For now, all of my key bindings will be here... this might go out of
+control -- we'll see.
+
+#+begin_src emacs-lisp
+  (keymap-global-set "M-o" 'other-window)  
+#+end_src
+
+* Theme
+
+#+begin_src emacs-lisp
+  (load-theme 'tsdh-dark)
+  (set-face-attribute 'default nil :height 210)
+  (toggle-frame-maximized)    
+#+end_src
