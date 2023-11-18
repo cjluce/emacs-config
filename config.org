@@ -57,7 +57,7 @@ Using this until I add in my vertico config stuff.
 
 * Project management
 
-Using magit for all of my git needs!
+Using [[https://magit.vc/]][[magit]] for all of my git needs!
 #+begin_src emacs-lisp
   (use-package magit)
 #+end_src
