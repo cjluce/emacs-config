@@ -1,3 +1,7 @@
+* TODOs
+** TODO This repo is currently only a fragment of my emacs config
+
+
 * Core package initialization
 
 #+name: init-core-package
@@ -39,8 +43,14 @@ enable it when I find a better use for it.
   (fringe-mode -1)
 #+end_src
 
+Enabling ~electric-pair-mode~ at the global level until it becomes
+annoying. I may restrict this to programming modes only.
 #+begin_src emacs-lisp
   (electric-pair-mode 1)
+#+end_src
+
+Using this until I add in my vertico config stuff.
+#+begin_src emacs-lisp
   (fido-mode 1)
 #+end_src
 
@@ -55,6 +65,8 @@ control -- we'll see.
 
 * Theme
 
+I want /all/ of my theme stuff to be located here, with the exception
+of some basic core configuration located above.
 #+begin_src emacs-lisp
   (load-theme 'tsdh-dark)
   (set-face-attribute 'default nil :height 210)
