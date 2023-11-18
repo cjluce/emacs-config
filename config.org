@@ -1,7 +1,6 @@
 * TODOs
 ** TODO This repo is currently only a fragment of my emacs config
 
-
 * Core package initialization
 
 #+name: init-core-package
@@ -29,6 +28,7 @@ will likely be used for package configuration as well.
 These section will contain (hopefully) all changes that I make to
 /default/ emacs to make it feel cozier.
 
+Ewww, mouse-based UI elements! Bye.
 #+better-defaults
 #+begin_src emacs-lisp
   (menu-bar-mode -1)
@@ -52,6 +52,14 @@ annoying. I may restrict this to programming modes only.
 Using this until I add in my vertico config stuff.
 #+begin_src emacs-lisp
   (fido-mode 1)
+  (fido-vertical-mode 1)
+#+end_src
+
+* Project management
+
+Using magit for all of my git needs!
+#+begin_src emacs-lisp
+  (use-package magit)
 #+end_src
 
 * Key bindings
