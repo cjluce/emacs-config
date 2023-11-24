@@ -2,7 +2,6 @@
 ** TODO This repo is currently only a fragment of my emacs config
 
 * Core package initialization
-
 #+name: init-core-package
 #+begin_src emacs-lisp
   (require 'package)
@@ -24,7 +23,6 @@ will likely be used for package configuration as well.
 #+end_src
 
 * Core configuration (better defaults)
-
 These section will contain (hopefully) all changes that I make to
 /default/ emacs to make it feel cozier.
 
@@ -55,13 +53,133 @@ Using this until I add in my vertico config stuff.
   (fido-vertical-mode 1)
 #+end_src
 
+Add some better behavior for emacs backups. Source:
+https://www.emacswiki.org/emacs/BackupDirectory
+#+begin_src emacs-lisp
+  (setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.emacs-saves/"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+#+end_src
+
 * Project management
-
-https://magit.vc/
-
 Using [[https://magit.vc/][magit]] for all of my git needs!
 #+begin_src emacs-lisp
   (use-package magit)
+#+end_src
+
+* Programming modes
+** Scheme
+Note: on my machine, the chicken binary is ~chicken-csi~, and not the
+default ~csi~. The bit of code I wrote just takes the first defined
+variable, starting with the default.
+#+begin_src emacs-lisp
+  (use-package geiser-chicken
+    :config
+    (setopt geiser-chicken-binary (-first #'(lambda (x) (not (null x)))
+					  (mapcar #'executable-find
+						  (list geiser-chicken-binary "chicken-csi")))))
+#+end_src
+
+** LaTeX
+Not sure whether I want to keep all of my org-babel declarations in
+one place or not. For now, I wont.
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages 'org-babel-load-languages '((latex . t)))
+#+end_src
+
+** Web
+Just testing out web-mode for now... may pivot.
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :mode ("\\.html\\'" "\\.css\\'"))
+#+end_src
+
+* Editing
+** Generic
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :config (rainbow-delimiters-mode 1))
+#+end_src
+
+** Lisp
+#+begin_src emacs-lisp
+  (use-package paredit
+    :magic ("%Geiser" . paredit-mode)
+    :hook ((scheme-mode . paredit-mode)
+	   (lisp-mode . paredit-mode)
+	   (emacs-lisp-mode . paredit-mode)))
+#+end_src
+
+* File modes
+Add pdf-tools (which requires an install on the system... perhaps I
+will check if it is installed on the system before attempting).
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :mode "\\.pdf\\'"
+    :magic ("%PDF" . pdf-view-mode)
+    :config
+    (pdf-tools-install :no-query))
+#+end_src
+
+** TODO Not working
+This mode allows the reading of epub documents (like /Mastering
+Emacs/)
+#+begin_src emacs-lisp
+  (use-package nov
+    :mode "\\.epub\\'"
+    :config
+    (setq nov-unzip-program (executable-find "bsdtar")
+	  nov-unzip-args '("-xC" directory "-f" filename)))
+#+end_src
+
+* Utility Packages
+I find this package absulutely critical when working in modes that are
+new to me
+#+begin_src emacs-lisp
+  (use-package which-key
+    :config (which-key-mode))
+#+end_src
+
+** tree-sitter
+
+https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+#+begin_src emacs-lisp
+  (setq treesit-language-source-alist
+	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+	  (cmake "https://github.com/uyha/tree-sitter-cmake")
+	  (css "https://github.com/tree-sitter/tree-sitter-css")
+	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	  (go "https://github.com/tree-sitter/tree-sitter-go")
+	  (html "https://github.com/tree-sitter/tree-sitter-html")
+	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+	  (json "https://github.com/tree-sitter/tree-sitter-json")
+	  (make "https://github.com/alemuller/tree-sitter-make")
+	  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	  (python "https://github.com/tree-sitter/tree-sitter-python")
+	  (toml "https://github.com/tree-sitter/tree-sitter-toml")
+	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+	  (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+#+end_src
+
+Run the following command to install a treesitter lang from the above
+sources:
+#+name: python-treesit-install-example
+#+begin_example
+M-x treesit-install-language-grammar RET python
+#+end_example
+
+* Eglot
+This is the place where I will make all of my eglot configurations,
+which will most likely be limited to auto starting the server for
+different modes.
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook 'eglot-ensure)
 #+end_src
 
 * Key bindings
