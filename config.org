@@ -66,6 +66,14 @@ https://www.emacswiki.org/emacs/BackupDirectory
    version-control t)       ; use versioned backups
 #+end_src
 
+This turns all yes/no questions into y/n questions, and doesn't
+require RET to be pressed. Note, this might not be the best decision,
+and some might prefer to choose when the full prompt is required
+instead: https://www.emacswiki.org/emacs/YesOrNoP.
+#+begin_src emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
 * Project management
 Using [[https://magit.vc/][magit]] for all of my git needs!
 #+begin_src emacs-lisp
@@ -173,6 +181,13 @@ sources:
 #+begin_example
 M-x treesit-install-language-grammar RET python
 #+end_example
+
+Use the treesitter mode instead of the default major mode (I think
+that you still have access to the default major mode utilities).
+#+begin_src emacs-lisp
+  (setq major-mode-remap-alist
+	'((python-mode . python-ts-mode)))
+#+end_src
 
 * Eglot
 This is the place where I will make all of my eglot configurations,
