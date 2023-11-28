@@ -404,6 +404,9 @@ control -- we'll see.
 
 I want /all/ of my theme stuff to be located here, with the exception
 of some basic core configuration located above.
+
+I am currently using gruvbox themes, but am interested in material
+themes and am also interested in creating my own.
 #+begin_src emacs-lisp
   (use-package gruvbox-theme)
 
