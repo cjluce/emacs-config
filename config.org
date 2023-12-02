@@ -267,6 +267,98 @@ I have a hard time existing without embark
     (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 
+Using corfu instead of company for my auto completion front-end. minad
+has several helpful examples to get started: https://github.com/minad/corfu
+#+begin_src emacs-lisp
+  (use-package corfu
+    :custom
+    (corfu-auto t)          ;; Enable auto completion
+    ;; (corfu-separator ?_) ;; Set to orderless separator, if not using space
+    :bind
+    ;; Another key binding can be used, such as S-SPC.
+    (:map corfu-map ("S-SPC" . corfu-insert-separator))
+    :init
+    (global-corfu-mode))
+
+  ;; Add extensions
+  (use-package cape
+    ;; Bind dedicated completion commands
+    ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+    :bind (("C-c p p" . completion-at-point) ;; capf
+	   ("C-c p t" . tempel-complete)
+	   ("C-c p g" . complete-tag)        ;; etags
+	   ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+	   ("C-c p h" . cape-history)
+	   ("C-c p f" . cape-file)
+	   ("C-c p k" . cape-keyword)
+	   ("C-c p s" . cape-elisp-symbol)
+	   ("C-c p e" . cape-elisp-block)
+	   ("C-c p a" . cape-abbrev)
+	   ("C-c p l" . cape-line)
+	   ("C-c p w" . cape-dict)
+	   ("C-c p :" . cape-emoji)
+	   ("C-c p \\" . cape-tex)
+	   ("C-c p _" . cape-tex)
+	   ("C-c p ^" . cape-tex)
+	   ("C-c p &" . cape-sgml)
+	   ("C-c p r" . cape-rfc1345))
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.  The order of the functions matters, the
+    ;; first function returning a result wins.  Note that the list of buffer-local
+    ;; completion functions takes precedence over the global list.
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+    (add-to-list 'completion-at-point-functions #'tempel-complete)
+    ;;(add-to-list 'completion-at-point-functions #'cape-history)
+    ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+    ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+    (add-to-list 'completion-at-point-functions #'cape-sgml)
+    ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+    ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+    ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+    ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+    ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  )
+#+end_src
+
+Template management with tempel
+#+begin_src emacs-lisp
+  (use-package tempel
+    ;; Require trigger prefix before template name when completing.
+    ;; :custom
+    ;; (tempel-trigger-prefix "<")
+
+    :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+	   ("M-*" . tempel-insert))
+
+    :init
+
+    ;; Setup completion at point
+    (defun tempel-setup-capf ()
+      ;; Add the Tempel Capf to `completion-at-point-functions'.
+      ;; `tempel-expand' only triggers on exact matches. Alternatively use
+      ;; `tempel-complete' if you want to see all matches, but then you
+      ;; should also configure `tempel-trigger-prefix', such that Tempel
+      ;; does not trigger too often when you don't expect it. NOTE: We add
+      ;; `tempel-expand' *before* the main programming mode Capf, such
+      ;; that it will be tried first.
+      (setq-local completion-at-point-functions
+		  (cons #'tempel-expand
+			completion-at-point-functions)))
+
+    (add-hook 'conf-mode-hook 'tempel-setup-capf)
+    (add-hook 'prog-mode-hook 'tempel-setup-capf)
+    (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+    ;; Optionally make the Tempel templates available to Abbrev,
+    ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+    (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+    (global-tempel-abbrev-mode)
+    )
+#+end_src
+
 * Project management
 Using [[https://magit.vc/][magit]] for all of my git needs!
 #+begin_src emacs-lisp
