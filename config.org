@@ -392,6 +392,20 @@ Just testing out web-mode for now... may pivot.
     :mode ("\\.html\\'" "\\.css\\'"))
 #+end_src
 
+** C
+#+begin_src emacs-lisp
+  (defun c--set-offset ()
+    (setq-default indent-tabs-mode nil)
+    (setq-default tab-width 4)
+    (setq c-set-style "k&r")
+    (setq c-basic-offset 4)
+    (setq c-ts-mode-indent-offset 4)
+    (setq c-default-style (cons '(c-mode . "k&r") c-default-style)))
+
+  (add-hook 'c-mode-hook 'c--set-offset)
+  (add-hook 'c-ts-mode-hook 'c--set-offset)
+#+end_src
+
 * Editing
 ** Generic
 #+begin_src emacs-lisp
@@ -444,6 +458,8 @@ https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
 #+begin_src emacs-lisp
   (setq treesit-language-source-alist
 	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+	  (c "https://github.com/tree-sitter/tree-sitter-c")
+	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
 	  (cmake "https://github.com/uyha/tree-sitter-cmake")
 	  (css "https://github.com/tree-sitter/tree-sitter-css")
 	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
@@ -471,9 +487,12 @@ M-x treesit-install-language-grammar RET python
 Use the treesitter mode instead of the default major mode (I think
 that you still have access to the default major mode utilities).
 #+begin_src emacs-lisp
-      (setq major-mode-remap-alist
-	    '((python-mode . python-ts-mode)
-	      (java-mode . java-ts-mode)))
+  (setq major-mode-remap-alist
+	'((python-mode . python-ts-mode)
+	  (java-mode . java-ts-mode)
+	  (c-mode . c-ts-mode)
+	  (cpp-mode . cpp-ts-mode)))
+
 #+end_src
 
 * Eglot
@@ -484,6 +503,8 @@ different modes.
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'python-ts-mode-hook 'eglot-ensure)
   (add-hook 'java-ts-mode-hook 'eglot-ensure)
+  (add-hook 'c-ts-mode-hook 'eglot-ensure)
+  (add-hook 'cpp-ts-mode-hook 'eglot-ensure)
 #+end_src
 
 * Key bindings
@@ -515,14 +536,15 @@ themes and am also interested in creating my own.
     (interactive)
     (let ((hour (decoded-time-hour (decode-time (float-time)))))
       (if (and (>= hour 8) (<= hour 19))
-	  (load-theme 'gruvbox-light-medium t)
-	(load-theme 'gruvbox-dark-medium t))))
+      (load-theme 'gruvbox-light-medium t)
+    (load-theme 'gruvbox-dark-medium t))))
 
   ;; call it on emacs start
   (cjl/refresh-theme)
 
-  ;; call it every half hour
-  (run-at-time "12:00am" "30 minutes" #'cjl/refresh-theme)
+  ;; call it every half hour (the repeat is in seconds)
+  ;; (run-at-time "12:00am" "30 minutes" #'cjl/refresh-theme)
+  (run-at-time 0 (* 30 60) #'cjl/refresh-theme)
 
 #+end_src
 
