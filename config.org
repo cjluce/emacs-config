@@ -84,53 +84,53 @@ while not being too "in the way."
     :init
     (defconst meow-cheatsheet-layout-canary
       '((<TLDE> "`" "~")
-	(<AE01> "1" "!")
-	(<AE02> "2" "@")
-	(<AE03> "3" "#")
-	(<AE04> "4" "$")
-	(<AE05> "5" "%")
-	(<AE06> "6" "^")
-	(<AE07> "7" "&")
-	(<AE08> "8" "*")
-	(<AE09> "9" "(")
-	(<AE10> "0" ")")
-	(<AE11> "-" "_")
-	(<AE12> "=" "+")
-	(<AD01> "w" "W")
-	(<AD02> "l" "L")
-	(<AD03> "y" "Y")
-	(<AD04> "p" "P")
-	(<AD05> "k" "K")
-	(<AD06> "z" "Z")
-	(<AD07> "x" "X")
-	(<AD08> "o" "O")
-	(<AD09> "u" "U")
-	(<AD10> ";" ":")
-	(<AD11> "[" "{")
-	(<AD12> "]" "}")
-	(<BKSL> "\\" "|")
-	(<AC01> "c" "C")
-	(<AC02> "r" "R")
-	(<AC03> "s" "S")
-	(<AC04> "t" "T")
-	(<AC05> "b" "B")
-	(<AC06> "f" "F")
-	(<AC07> "n" "N")
-	(<AC08> "e" "E")
-	(<AC09> "i" "I")
-	(<AC10> "a" "A")
-	(<AC11> "'" "\"")
-	(<AB01> "j" "J")
-	(<AB02> "v" "V")
-	(<AB03> "d" "D")
-	(<AB04> "g" "G")
-	(<AB05> "q" "Q")
-	(<AB06> "m" "M")
-	(<AB07> "h" "H")
-	(<AB08> "/" "?")
-	(<AB09> "," "<")
-	(<AB10> "." ">")
-	(<LSGT> "-" "_")))
+    (<AE01> "1" "!")
+    (<AE02> "2" "@")
+    (<AE03> "3" "#")
+    (<AE04> "4" "$")
+    (<AE05> "5" "%")
+    (<AE06> "6" "^")
+    (<AE07> "7" "&")
+    (<AE08> "8" "*")
+    (<AE09> "9" "(")
+    (<AE10> "0" ")")
+    (<AE11> "-" "_")
+    (<AE12> "=" "+")
+    (<AD01> "w" "W")
+    (<AD02> "l" "L")
+    (<AD03> "y" "Y")
+    (<AD04> "p" "P")
+    (<AD05> "k" "K")
+    (<AD06> "z" "Z")
+    (<AD07> "x" "X")
+    (<AD08> "o" "O")
+    (<AD09> "u" "U")
+    (<AD10> ";" ":")
+    (<AD11> "[" "{")
+    (<AD12> "]" "}")
+    (<BKSL> "\\" "|")
+    (<AC01> "c" "C")
+    (<AC02> "r" "R")
+    (<AC03> "s" "S")
+    (<AC04> "t" "T")
+    (<AC05> "b" "B")
+    (<AC06> "f" "F")
+    (<AC07> "n" "N")
+    (<AC08> "e" "E")
+    (<AC09> "i" "I")
+    (<AC10> "a" "A")
+    (<AC11> "'" "\"")
+    (<AB01> "j" "J")
+    (<AB02> "v" "V")
+    (<AB03> "d" "D")
+    (<AB04> "g" "G")
+    (<AB05> "q" "Q")
+    (<AB06> "m" "M")
+    (<AB07> "h" "H")
+    (<AB08> "/" "?")
+    (<AB09> "," "<")
+    (<AB10> "." ">")
+    (<LSGT> "-" "_")))
     :config
     (defun meow-setup ()
       (setq meow-cheatsheet-layout meow-cheatsheet-layout-canary)
@@ -220,6 +220,21 @@ while not being too "in the way."
        '("z" . meow-pop-selection)
        '("'" . repeat)
        '("<escape>" . ignore)))
+    (meow-thing-register 'angle
+		     '(pair ("<") (">"))
+		     '(pair ("<") (">")))
+    (meow-thing-register 'squote
+		     '(pair ("'") ("'"))
+		     '(pair ("'") ("'")))
+    (meow-thing-register 'dquote
+		     '(pair ("\"") ("\""))
+		     '(pair ("\"") ("\"")))
+    (add-to-list 'meow-char-thing-table '(?< . angle))
+    (add-to-list 'meow-char-thing-table '(?( . round))
+    (add-to-list 'meow-char-thing-table '(?[ . square))
+    (add-to-list 'meow-char-thing-table '(?{ . curly))
+    (add-to-list 'meow-char-thing-table '(?' . squote))
+    (add-to-list 'meow-char-thing-table '(?\" . dquote))
     (meow-setup)
     (meow-global-mode 1)
     (meow-esc-mode)
@@ -523,20 +538,36 @@ Note: on my machine, the chicken binary is ~chicken-csi~, and not the
 default ~csi~. The bit of code I wrote just takes the first defined
 variable, starting with the default.
 #+begin_src emacs-lisp
-  (let ((chicken-binary (-first #'(lambda (x) (not (null x)))
-				(mapcar #'executable-find
-					(list geiser-chicken-binary "chicken-csi")))))
-    (unless (null chicken-binary)
-      (use-package geiser-chicken
-	:config
-	(setopt geiser-chicken-binary chicken-binary))))
+  ;; (let ((chicken-binary (-first #'(lambda (x) (not (null x)))
+  ;; 			      (mapcar #'executable-find
+  ;; 				      (list geiser-chicken-binary "chicken-csi")))))
+  ;;   (unless (null chicken-binary)
+  ;;     (use-package geiser-chicken
+  ;;       :config
+  ;;       (setopt geiser-chicken-binary chicken-binary))))
+
+  (use-package geiser-chicken
+    :config
+    (setopt geiser-chicken-binary (-first #'(lambda (x) (not (null x)))
+					  (mapcar #'executable-find
+						  (list geiser-chicken-binary "chicken-csi")))))
+#+end_src
+
+*** Racket
+
+Racket behaves a little different than other schemes.
+
+#+begin_src emacs-lisp
+  (use-package racket-mode)
 #+end_src
 
 ** LaTeX
 Not sure whether I want to keep all of my org-babel declarations in
 one place or not. For now, I wont.
 #+begin_src emacs-lisp
-  (org-babel-do-load-languages 'org-babel-load-languages '((latex . t)))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((latex . t)
+                                 (scheme . t)))
 #+end_src
 
 ** Web
@@ -569,11 +600,20 @@ Just testing out web-mode for now... may pivot.
 
 ** Lisp
 #+begin_src emacs-lisp
-  (use-package paredit
-    :magic ("%Geiser" . paredit-mode)
-    :hook ((scheme-mode . paredit-mode)
-	   (lisp-mode . paredit-mode)
-	   (emacs-lisp-mode . paredit-mode)))
+    (use-package paredit
+      :magic ("%Geiser" . paredit-mode)
+      :hook ((scheme-mode . paredit-mode)
+	     (lisp-mode . paredit-mode)
+	     (emacs-lisp-mode . paredit-mode)
+	     (racket-mode . paredit-mode)
+	     ;; (racket-repl-mode . paredit-mode)
+	     ))
+    (advice-add 'paredit-RET
+		:after
+		(lambda ()
+		  (when (string-prefix-p "*Racket REPL"
+					 (buffer-name (current-buffer)))
+		    (newline))))
 #+end_src
 
 * File modes
