@@ -591,6 +591,11 @@ Just testing out web-mode for now... may pivot.
   (add-hook 'c-ts-mode-hook 'c--set-offset)
 #+end_src
 
+** Lua
+#+begin_src emacs-lisp
+  (use-package lua-mode)
+#+end_src
+
 * Editing
 ** Generic
 #+begin_src emacs-lisp
