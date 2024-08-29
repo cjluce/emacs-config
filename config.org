@@ -74,6 +74,20 @@ instead: https://www.emacswiki.org/emacs/YesOrNoP.
   (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
+MacOS config for when I am on mac.
+#+begin_src emacs-lisp
+  (when (eq system-type 'darwin)
+    (setq ns-use-native-fullscreen t
+	  mac-right-command-modifier 'alt
+	  mac-left-command-modifier 'meta
+	  mac-option-key-is-meta nil
+	  mac-command-key-is-meta t
+	  mac-command-modifier 'meta
+	  mac-option-modifier nil
+	  mac-use-title-bar nil))
+
+#+end_src
+
 * Project management
 Using [[https://magit.vc/][magit]] for all of my git needs!
 #+begin_src emacs-lisp
@@ -81,18 +95,6 @@ Using [[https://magit.vc/][magit]] for all of my git needs!
 #+end_src
 
 * Programming modes
-** Scheme
-Note: on my machine, the chicken binary is ~chicken-csi~, and not the
-default ~csi~. The bit of code I wrote just takes the first defined
-variable, starting with the default.
-#+begin_src emacs-lisp
-  (use-package geiser-chicken
-    :config
-    (setopt geiser-chicken-binary (-first #'(lambda (x) (not (null x)))
-					  (mapcar #'executable-find
-						  (list geiser-chicken-binary "chicken-csi")))))
-#+end_src
-
 ** LaTeX
 Not sure whether I want to keep all of my org-babel declarations in
 one place or not. For now, I wont.
