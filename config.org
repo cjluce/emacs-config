@@ -75,7 +75,7 @@ instead: https://www.emacswiki.org/emacs/YesOrNoP.
   (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-MacOS config for when I am on mac.
+MacOS-specific config
 #+begin_src emacs-lisp
   (when (eq system-type 'darwin)
     (setq ns-use-native-fullscreen t
@@ -86,6 +86,7 @@ MacOS config for when I am on mac.
 	  mac-command-modifier 'meta
 	  mac-option-modifier nil
 	  mac-use-title-bar nil))
+
 
 * meow
 
