@@ -75,6 +75,20 @@ instead: https://www.emacswiki.org/emacs/YesOrNoP.
   (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
+MacOS config for when I am on mac.
+#+begin_src emacs-lisp
+  (when (eq system-type 'darwin)
+    (setq ns-use-native-fullscreen t
+	  mac-right-command-modifier 'meta
+	  mac-left-command-modifier 'meta
+	  mac-option-key-is-meta nil
+	  mac-command-key-is-meta t
+	  mac-command-modifier 'meta
+	  mac-option-modifier nil
+	  mac-use-title-bar nil))
+
+#+end_src
+
 * meow
 
 I find that meow strikes a great balance of comfortable modal editing,
@@ -546,11 +560,11 @@ variable, starting with the default.
   ;;       :config
   ;;       (setopt geiser-chicken-binary chicken-binary))))
 
-  (use-package geiser-chicken
-    :config
-    (setopt geiser-chicken-binary (-first #'(lambda (x) (not (null x)))
-					  (mapcar #'executable-find
-						  (list geiser-chicken-binary "chicken-csi")))))
+  ;; (use-package geiser-chicken
+  ;;   :config
+  ;;   (setopt geiser-chicken-binary (-first #'(lambda (x) (not (null x)))
+  ;; 					(mapcar #'executable-find
+  ;; 						(list geiser-chicken-binary "chicken-csi")))))
 #+end_src
 
 *** Racket
@@ -704,6 +718,13 @@ different modes.
   (add-hook 'java-ts-mode-hook 'eglot-ensure)
   (add-hook 'c-ts-mode-hook 'eglot-ensure)
   (add-hook 'cpp-ts-mode-hook 'eglot-ensure)
+#+end_src
+
+* Data Science
+I'll start by initially throwing all of my configuration that is
+broadly related to my data work here. I may move it later.
+#+begin_src emacs-lisp
+  (use-package micromamba)
 #+end_src
 
 * Key bindings
