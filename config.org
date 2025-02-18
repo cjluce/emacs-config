@@ -75,18 +75,29 @@ instead: https://www.emacswiki.org/emacs/YesOrNoP.
   (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
+<<<<<<< HEAD
 MacOS config for when I am on mac.
 #+begin_src emacs-lisp
   (when (eq system-type 'darwin)
     (setq ns-use-native-fullscreen t
 	  mac-right-command-modifier 'meta
+=======
+MacOS-specific config
+#+begin_src emacs-lisp
+  (when (eq system-type 'darwin)
+    (setq ns-use-native-fullscreen t
+	  mac-right-command-modifier 'alt
+>>>>>>> refs/remotes/origin/main
 	  mac-left-command-modifier 'meta
 	  mac-option-key-is-meta nil
 	  mac-command-key-is-meta t
 	  mac-command-modifier 'meta
 	  mac-option-modifier nil
 	  mac-use-title-bar nil))
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/main
 #+end_src
 
 * meow
@@ -547,6 +558,7 @@ Using [[https://magit.vc/][magit]] for all of my git needs!
 #+end_src
 
 * Programming modes
+<<<<<<< HEAD
 ** Scheme
 Note: on my machine, the chicken binary is ~chicken-csi~, and not the
 default ~csi~. The bit of code I wrote just takes the first defined
@@ -575,6 +587,8 @@ Racket behaves a little different than other schemes.
   (use-package racket-mode)
 #+end_src
 
+=======
+>>>>>>> refs/remotes/origin/main
 ** LaTeX
 Not sure whether I want to keep all of my org-babel declarations in
 one place or not. For now, I wont.
