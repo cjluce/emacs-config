@@ -19,9 +19,15 @@ Otherwise, just yield the init file.")
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("98ef36d4487bf5e816f89b1b1240d45755ec382c7029302f36ca6626faf44bbd" "046a2b81d13afddae309930ef85d458c4f5d278a69448e5a5261a5c78598e012" "18cf5d20a45ea1dff2e2ffd6fbcd15082f9aa9705011a3929e77129a971d1cb3" default))
+   '("98ef36d4487bf5e816f89b1b1240d45755ec382c7029302f36ca6626faf44bbd"
+     "046a2b81d13afddae309930ef85d458c4f5d278a69448e5a5261a5c78598e012"
+     "18cf5d20a45ea1dff2e2ffd6fbcd15082f9aa9705011a3929e77129a971d1cb3"
+     default))
  '(package-selected-packages
-   '(micromamba eglot lua-mode racket-mode tempel cape corfu gruvbox-theme zenburn-theme zenburn embark-consult embark consult marginalia orderless vertico nov web-mode which-key pdf-tools rainbow-delimiters paredit geiser-chicken magit)))
+   '(cape corfu emacs-reformatter embark-consult exec-path-from-shell
+	  gruvbox-theme lua-mode magit marginalia meow micromamba nov
+	  orderless paredit pdf-tools rainbow-delimiters tempel
+	  vertico vterm web-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
