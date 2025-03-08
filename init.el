@@ -25,9 +25,9 @@ Otherwise, just yield the init file.")
      default))
  '(package-selected-packages
    '(cape corfu emacs-reformatter embark-consult exec-path-from-shell
-	  gruvbox-theme lua-mode magit marginalia meow micromamba nov
-	  orderless paredit pdf-tools rainbow-delimiters tempel
-	  vertico vterm web-mode)))
+	  expand-region gruvbox-theme lua-mode magit marginalia meow
+	  micromamba nov orderless paredit pdf-tools
+	  rainbow-delimiters tempel vertico vterm web-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
