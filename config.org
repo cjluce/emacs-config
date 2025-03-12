@@ -278,6 +278,18 @@ while not being too "in the way."
     :bind ("C-=" . er/expand-region))
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package gptel
+    :config
+    (setq
+     gptel-model 'qwen2.5-coder:14b
+     gptel-backend (gptel-make-ollama "Ollama"
+                     :host "127.0.0.1:11434"
+                     :stream t
+                     :models '(qwen2.5-coder:14b))))
+#+end_src
+
+
 * Completion engine
 
 I will be using the vertico suite of packages
