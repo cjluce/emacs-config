@@ -20,17 +20,21 @@ Otherwise, just yield the init file.")
  ;; If there is more than one, they won't work right.
  '(c-ts-mode-indent-style 'k&r)
  '(custom-safe-themes
-   '("98ef36d4487bf5e816f89b1b1240d45755ec382c7029302f36ca6626faf44bbd"
+   '("18a1d83b4e16993189749494d75e6adb0e15452c80c431aca4a867bcc8890ca9"
+     "5aedf993c7220cbbe66a410334239521d8ba91e1815f6ebde59cecc2355d7757"
+     "5a0ddbd75929d24f5ef34944d78789c6c3421aa943c15218bac791c199fc897d"
+     "98ef36d4487bf5e816f89b1b1240d45755ec382c7029302f36ca6626faf44bbd"
      "046a2b81d13afddae309930ef85d458c4f5d278a69448e5a5261a5c78598e012"
      "18cf5d20a45ea1dff2e2ffd6fbcd15082f9aa9705011a3929e77129a971d1cb3"
      default))
  '(gptel-api-key
    "AAAAC3NzaC1lZDI1NTE5AAAAID+wv3T2nsruX87fIaxnwGNYcx4A07LIk3SU/zj4vz9j")
  '(package-selected-packages
-   '(cape corfu emacs-reformatter embark-consult exec-path-from-shell
-          expand-region gptel gptel-mode gruvbox-theme lua-mode magit
-          marginalia meow micromamba mugur nov orderless paredit
-          pdf-tools rainbow-delimiters tempel vertico vterm web-mode))
+   '(cape corfu corfu-terminal emacs-reformatter embark-consult
+	  exec-path-from-shell expand-region gptel gptel-mode
+	  gruvbox-theme lua-mode magit marginalia micromamba mugur
+	  multiple-cursors nov orderless org-agenda org-modern paredit
+	  pdf-tools rainbow-delimiters tempel vertico vterm web-mode))
  '(warning-suppress-log-types '((gptel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

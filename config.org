@@ -1,387 +1,183 @@
 * TODOs
-** TODO This repo is currently only a fragment of my emacs config
 
-* Core package initialization
+** TODO Reorganize into more useful sections
+
+
+* Installation
+
+I recommend restarting emacs after install.
+
+* Base
+
+This is my version of "sensible defaults."
+
 #+name: init-core-package
 #+begin_src emacs-lisp
   (require 'package)
   (add-to-list 'package-archives
-	       '("melpa" . "https://melpa.org/packages/"))
+               '("melpa" . "https://melpa.org/packages/"))
 
   (unless package-archive-contents
     (package-refresh-contents))
-#+end_src
 
-I am going to be using ~use-package~ to install _all_ packages. It
-will likely be used for package configuration as well.
-#+name: init-use-package
-#+begin_src emacs-lisp
   (unless (package-installed-p 'use-package)
     (package-install 'use-package))
+
   (require 'use-package)
+
   (setq use-package-always-ensure t)
-#+end_src
 
-* Core configuration (better defaults)
-These section will contain (hopefully) all changes that I make to
-/default/ emacs to make it feel cozier.
-
-Ewww, mouse-based UI elements! Bye.
-#+better-defaults
-#+begin_src emacs-lisp
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (setq inhibit-splash-screen -1)
   (setq initial-buffer-choice t)
-#+end_src
 
-I am going to default ~fringe-mode~ to off because I am not yet
-putting it to use. It does seem interesting, and I will probably
-enable it when I find a better use for it.
-#+begin_src emacs-lisp
   (fringe-mode -1)
-#+end_src
 
-Enabling ~electric-pair-mode~ at the global level until it becomes
-annoying. I may restrict this to programming modes only.
-#+begin_src emacs-lisp
   (electric-pair-mode 1)
-#+end_src
 
-Using this until I add in my vertico config stuff.
-#+begin_example
-  (fido-mode 1)
-  (fido-vertical-mode 1)
-#+end_example
+  (unless (package-installed-p 'vertico)
+    (fido-mode 1)
+    (fido-vertical-mode 1))
 
-Add some better behavior for emacs backups. Source:
-https://www.emacswiki.org/emacs/BackupDirectory
-#+begin_src emacs-lisp
   (setq
-   backup-by-copying t      ; don't clobber symlinks
+   backup-by-copying t                    ; don't clobber symlinks
    backup-directory-alist
-    '(("." . "~/.emacs-saves/"))    ; don't litter my fs tree
+   '(("." . "~/.emacs-saves/"))           ; don't litter my fs tree
    delete-old-versions t
    kept-new-versions 6
    kept-old-versions 2
    version-control t)       ; use versioned backups
-#+end_src
 
-This turns all yes/no questions into y/n questions, and doesn't
-require RET to be pressed. Note, this might not be the best decision,
-and some might prefer to choose when the full prompt is required
-instead: https://www.emacswiki.org/emacs/YesOrNoP.
-#+begin_src emacs-lisp
   (defalias 'yes-or-no-p 'y-or-n-p)
-#+end_src
-MacOS config for when I am on mac.
-#+begin_src emacs-lisp
+
+  ;; MacOS
   (when (eq system-type 'darwin)
     (setq ns-use-native-fullscreen t
-	  mac-right-command-modifier 'meta
-	  mac-left-command-modifier 'meta
-	  mac-option-key-is-meta nil
-	  mac-command-key-is-meta t
-	  mac-command-modifier 'meta
-	  mac-option-modifier 'super
-	  mac-use-title-bar nil))
-#+end_src
+   	mac-right-command-modifier 'meta
+   	mac-left-command-modifier 'meta
+   	mac-option-key-is-meta nil
+   	mac-command-key-is-meta t
+   	mac-command-modifier 'meta
+   	mac-option-modifier 'super
+   	mac-use-title-bar nil))
 
-* fix my pathing
+  (use-package exec-path-from-shell
+    :config (exec-path-from-shell-initialize))
 
-This is a wonderful package that sets your PATH imports your PATH
-variable into emacs, even if you aren't calling emacs from the
-terminal.
-
-#+begin_src emacs-lisp
-    (use-package exec-path-from-shell
-      :config (exec-path-from-shell-initialize))
-#+end_src
-
-* vterm
-#+begin_src emacs-lisp
   (use-package vterm)
-#+end_src
 
-* meow
-
-I find that meow strikes a great balance of comfortable modal editing,
-while not being too "in the way."
-#+begin_src emacs-lisp
-    (use-package meow
-      :init
-      (defconst meow-cheatsheet-layout-canary
-        '((<TLDE> "`" "~")
-      (<AE01> "1" "!")
-      (<AE02> "2" "@")
-      (<AE03> "3" "#")
-      (<AE04> "4" "$")
-      (<AE05> "5" "%")
-      (<AE06> "6" "^")
-      (<AE07> "7" "&")
-      (<AE08> "8" "*")
-      (<AE09> "9" "(")
-      (<AE10> "0" ")")
-      (<AE11> "-" "_")
-      (<AE12> "=" "+")
-      (<AD01> "w" "W")
-      (<AD02> "l" "L")
-      (<AD03> "y" "Y")
-      (<AD04> "p" "P")
-      (<AD05> "k" "K")
-      (<AD06> "z" "Z")
-      (<AD07> "x" "X")
-      (<AD08> "o" "O")
-      (<AD09> "u" "U")
-      (<AD10> ";" ":")
-      (<AD11> "[" "{")
-      (<AD12> "]" "}")
-      (<BKSL> "\\" "|")
-      (<AC01> "c" "C")
-      (<AC02> "r" "R")
-      (<AC03> "s" "S")
-      (<AC04> "t" "T")
-      (<AC05> "b" "B")
-      (<AC06> "f" "F")
-      (<AC07> "n" "N")
-      (<AC08> "e" "E")
-      (<AC09> "i" "I")
-      (<AC10> "a" "A")
-      (<AC11> "'" "\"")
-      (<AB01> "j" "J")
-      (<AB02> "v" "V")
-      (<AB03> "d" "D")
-      (<AB04> "g" "G")
-      (<AB05> "q" "Q")
-      (<AB06> "m" "M")
-      (<AB07> "h" "H")
-      (<AB08> "/" "?")
-      (<AB09> "," "<")
-      (<AB10> "." ">")
-      (<LSGT> "-" "_")))
-      :config
-      (defun meow-setup ()
-        (setq meow-cheatsheet-layout meow-cheatsheet-layout-canary)
-        (meow-motion-overwrite-define-key
-         ;; Use e to move up, n to move down.
-         ;; Since special modes usually use n to move down, we only overwrite e here.
-         '("e" . meow-prev)
-         '("<escape>" . ignore))
-        (meow-leader-define-key
-         '("?" . meow-cheatsheet)
-         ;; To execute the originally e in MOTION state, use SPC e.
-         '("e" . "H-e")
-         '("1" . meow-digit-argument)
-         '("2" . meow-digit-argument)
-         '("3" . meow-digit-argument)
-         '("4" . meow-digit-argument)
-         '("5" . meow-digit-argument)
-         '("6" . meow-digit-argument)
-         '("7" . meow-digit-argument)
-         '("8" . meow-digit-argument)
-         '("9" . meow-digit-argument)
-         '("0" . meow-digit-argument))
-        (meow-normal-define-key
-         '("0" . meow-expand-0)
-         '("1" . meow-expand-1)
-         '("2" . meow-expand-2)
-         '("3" . meow-expand-3)
-         '("4" . meow-expand-4)
-         '("5" . meow-expand-5)
-         '("6" . meow-expand-6)
-         '("7" . meow-expand-7)
-         '("8" . meow-expand-8)
-         '("9" . meow-expand-9)
-         '("-" . negative-argument)
-         '(";" . meow-reverse)
-         '("," . meow-inner-of-thing)
-         '("." . meow-bounds-of-thing)
-         '("[" . meow-beginning-of-thing)
-         '("]" . meow-end-of-thing)
-         '("/" . meow-visit)
-         '("a" . meow-append)
-         '("A" . meow-open-below)
-         '("b" . meow-back-word)
-         '("B" . meow-back-symbol)
-         '("c" . meow-change)
-         '("d" . meow-delete)
-         '("D" . meow-backward-delete)
-         '("e" . meow-prev)
-         '("E" . meow-prev-expand)
-         ;; '("f" . meow-find)
-         '("f" . meow-left)
-         '("F" . meow-left-expand)
-         '("g" . meow-cancel-selection)
-         '("G" . meow-grab)
-         ;; '("h" . meow-left)
-         ;; '("H" . meow-left-expand)
-         '("h" . meow-find)
-         '("i" . meow-right)
-         '("I" . meow-right-expand)
-         '("j" . meow-join)
-         '("k" . meow-kill)
-         '("l" . meow-line)
-         '("L" . meow-goto-line)
-         '("m" . meow-mark-word)
-         '("M" . meow-mark-symbol)
-         '("n" . meow-next)
-         '("N" . meow-next-expand)
-         '("s" . meow-block)
-         '("S" . meow-to-block)
-         '("p" . meow-yank)
-         '("q" . meow-quit)
-         '("r" . meow-replace)
-         '("R" . meow-swap-grab)
-         '("o" . meow-insert)
-         '("O" . meow-open-above)
-         '("t" . meow-till)
-         '("u" . meow-undo)
-         '("U" . meow-undo-in-selection)
-         '("v" . meow-search)
-         '("w" . meow-next-word)
-         '("W" . meow-next-symbol)
-         ;; I might make x and X start and end macros...
-         '("x" . meow-start-kmacro-or-insert-counter)
-         '("X" . meow-end-or-call-kmacro)
-         '("y" . meow-save)
-         '("Y" . meow-sync-grab)
-         '("z" . meow-pop-selection)
-         '("'" . repeat)
-         '("<escape>" . ignore)))
-      (meow-thing-register 'angle
-    		     '(pair ("<") (">"))
-    		     '(pair ("<") (">")))
-      (meow-thing-register 'dquote
-                       '(regexp "\"" "\"")
-                       '(regexp "\"" "\""))
-  (meow-thing-register 'squote
-                       '(regexp "'" "'")
-                       '(regexp "'" "'"))
-      (add-to-list 'meow-char-thing-table '(?\< . angle))
-      (add-to-list 'meow-char-thing-table '(?\( . round))
-      (add-to-list 'meow-char-thing-table '(?\[ . square))
-      (add-to-list 'meow-char-thing-table '(?\{ . curly))
-      (add-to-list 'meow-char-thing-table '(?\' . squote))
-      (add-to-list 'meow-char-thing-table '(?\" . dquote))
-      ;; (meow-setup)
-      ;; (meow-global-mode 1)
-      ;; (meow-esc-mode)
-      ;; (meow-setup-indicator)
-       )
-#+end_src
-
-* QoL
-
-#+begin_src emacs-lisp
   (use-package expand-region
     :bind ("C-=" . er/expand-region))
-#+end_src
 
-#+begin_src emacs-lisp
-  (use-package gptel
-    :config
-    (setq
-     gptel-model 'qwen2.5-coder:14b
-     gptel-backend (gptel-make-ollama "Ollama"
-                     :host "127.0.0.1:11434"
-                     :stream t
-                     :models '(qwen2.5-coder:14b))))
+  (which-key-mode)
+
+  (use-package magit)
+
+  (savehist-mode)
+  (save-place-mode 1)
+  (winner-mode)
+
+  (autoload 'zap-up-to-char "misc"
+    "Kill up to, but not including ARGth occurrence of CHAR." t)
+
+  (global-set-key (kbd "M-/") 'hippie-expand)
+  (global-set-key (kbd "M-z") 'zap-up-to-char)
+  (keymap-global-set "M-o" 'other-window)
+
+  (setq save-interprogram-paste-before-kill t
+        apropos-do-all t
+        require-final-newline t
+        load-prefer-newer t)
+
+  ;; e.g., for s=LookAtMe, word commands will stop at Look
+  (add-hook 'prog-mode-hook 'subword-mode)
+
 #+end_src
 
 
 * Completion engine
 
-I will be using the vertico suite of packages
+All of these packages are related to [[https://github.com/minad/vertico][vertico]], which are more true to
+base emacs than alternatives. In the same vein, I use corfu instead of
+company which has a [[https://github.com/minad/corfu][very helpful github]].
+
 #+begin_src emacs-lisp
   (use-package vertico
     :init (vertico-mode))
 
-  (use-package savehist
-    :init
-    (savehist-mode))
-#+end_src
-
-This is the buffer completion engine
-#+begin_src emacs-lisp
-  ;; Optionally use the `orderless' completion style.
   (use-package orderless
     :init
     ;; Configure a custom style dispatcher (see the Consult wiki)
     ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
     ;;       orderless-component-separator #'orderless-escapable-split-on-space)
     (setq completion-styles '(orderless basic)
-	  completion-category-defaults nil
-	  completion-category-overrides '((file (styles partial-completion)))))
-#+end_src
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
 
-Nice annotations for the minibuffer
-#+begin_src emacs-lisp
-  (use-package marginalia
+  (use-package 
+    marginalia
     :custom
     (marginalia-max-relative-age 0)
     (marginalia-align 'left)
     :init
     (marginalia-mode))
-#+end_src
 
-Remove keybinds as i find that i don't use them
-#+begin_src emacs-lisp
-  ;; Example configuration for Consult
   (use-package consult
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings in `mode-specific-map'
-	   ("C-c M-x" . consult-mode-command)
-	   ("C-c h" . consult-history)
-	   ("C-c k" . consult-kmacro)
-	   ("C-c m" . consult-man)
-	   ("C-c i" . consult-info)
-	   ([remap Info-search] . consult-info)
-	   ;; C-x bindings in `ctl-x-map'
-	   ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-	   ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-	   ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-	   ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-	   ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
-	   ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-	   ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-	   ;; Custom M-# bindings for fast register access
-	   ("M-#" . consult-register-load)
-	   ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-	   ("C-M-#" . consult-register)
-	   ;; Other custom bindings
-	   ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-	   ;; M-g bindings in `goto-map'
-	   ("M-g e" . consult-compile-error)
-	   ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-	   ("M-g g" . consult-goto-line)             ;; orig. goto-line
-	   ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-	   ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-	   ("M-g m" . consult-mark)
-	   ("M-g k" . consult-global-mark)
-	   ("M-g i" . consult-imenu)
-	   ("M-g I" . consult-imenu-multi)
-	   ;; M-s bindings in `search-map'
-	   ("M-s d" . consult-find)                  ;; Alternative: consult-fd
-	   ("M-s c" . consult-locate)
-	   ("M-s g" . consult-grep)
-	   ("M-s G" . consult-git-grep)
-	   ("M-s r" . consult-ripgrep)
-	   ("M-s l" . consult-line)
-	   ("M-s L" . consult-line-multi)
-	   ("M-s k" . consult-keep-lines)
-	   ("M-s u" . consult-focus-lines)
-	   ;; Isearch integration
-	   ("M-s e" . consult-isearch-history)
-	   :map isearch-mode-map
-	   ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-	   ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-	   ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-	   ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-	   ;; Minibuffer history
-	   :map minibuffer-local-map
-	   ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-	   ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+  	 ("C-c M-x" . consult-mode-command)
+  	 ("C-c h" . consult-history)
+  	 ("C-c k" . consult-kmacro)
+  	 ("C-c m" . consult-man)
+  	 ("C-c i" . consult-info)
+  	 ([remap Info-search] . consult-info)
+  	 ;; C-x bindings in `ctl-x-map'
+  	 ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+  	 ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+  	 ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+  	 ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+  	 ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
+  	 ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+  	 ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+  	 ;; Custom M-# bindings for fast register access
+  	 ("M-#" . consult-register-load)
+  	 ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+  	 ("C-M-#" . consult-register)
+  	 ;; Other custom bindings
+  	 ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+  	 ;; M-g bindings in `goto-map'
+  	 ("M-g e" . consult-compile-error)
+  	 ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+  	 ("M-g g" . consult-goto-line)             ;; orig. goto-line
+  	 ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+  	 ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+  	 ("M-g m" . consult-mark)
+  	 ("M-g k" . consult-global-mark)
+  	 ("M-g i" . consult-imenu)
+  	 ("M-g I" . consult-imenu-multi)
+  	 ;; M-s bindings in `search-map'
+  	 ("M-s d" . consult-find)                  ;; Alternative: consult-fd
+  	 ("M-s c" . consult-locate)
+  	 ("M-s g" . consult-grep)
+  	 ("M-s G" . consult-git-grep)
+  	 ("M-s r" . consult-ripgrep)
+  	 ("M-s l" . consult-line)
+  	 ("M-s L" . consult-line-multi)
+  	 ("M-s k" . consult-keep-lines)
+  	 ("M-s u" . consult-focus-lines)
+  	 ;; Isearch integration
+  	 ("M-s e" . consult-isearch-history)
+  	 :map isearch-mode-map
+  	 ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+  	 ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+  	 ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+  	 ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+  	 ;; Minibuffer history
+  	 :map minibuffer-local-map
+  	 ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+  	 ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
     ;; Enable automatic preview at point in the *Completions* buffer. This is
     ;; relevant when you use the default completion UI.
@@ -394,7 +190,7 @@ Remove keybinds as i find that i don't use them
     ;; preview for `consult-register', `consult-register-load',
     ;; `consult-register-store' and the Emacs built-ins.
     (setq register-preview-delay 0.5
-	  register-preview-function #'consult-register-format)
+  	register-preview-function #'consult-register-format)
 
     ;; Optionally tweak the register preview window.
     ;; This adds thin lines, sorting and hides the mode line of the window.
@@ -402,7 +198,7 @@ Remove keybinds as i find that i don't use them
 
     ;; Use Consult to select xref locations with preview
     (setq xref-show-xrefs-function #'consult-xref
-	  xref-show-definitions-function #'consult-xref)
+  	xref-show-definitions-function #'consult-xref)
 
     ;; Configure other variables and modes in the :config section,
     ;; after lazily loading the package.
@@ -446,10 +242,7 @@ Remove keybinds as i find that i don't use them
     ;;;; 5. No project support
     ;; (setq consult-project-function nil)
     )
-#+end_src
 
-I have a hard time existing without embark
-#+begin_src emacs-lisp
   (use-package embark
     :ensure t
 
@@ -472,20 +265,16 @@ I have a hard time existing without embark
 
     ;; Hide the mode line of the Embark live/completions buffers
     (add-to-list 'display-buffer-alist
-		 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-		   nil
-		   (window-parameters (mode-line-format . none)))))
+    	       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+    		 nil
+    		 (window-parameters (mode-line-format . none)))))
 
   ;; Consult users will also want the embark-consult package.
   (use-package embark-consult
     :ensure t ; only need to install it, embark loads it after consult if found
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
-#+end_src
 
-Using corfu instead of company for my auto completion front-end. minad
-has several helpful examples to get started: https://github.com/minad/corfu
-#+begin_src emacs-lisp
   (use-package corfu
     :custom
     (corfu-auto t)          ;; Enable auto completion
@@ -496,28 +285,30 @@ has several helpful examples to get started: https://github.com/minad/corfu
     :init
     (global-corfu-mode))
 
+  (use-package corfu-terminal)
+
   ;; Add extensions
   (use-package cape
     ;; Bind dedicated completion commands
     ;; Alternative prefix keys: C-c p, M-p, M-+, ...
     :bind (("C-c p p" . completion-at-point) ;; capf
-	   ("C-c p t" . tempel-complete)
-	   ("C-c p g" . complete-tag)        ;; etags
-	   ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-	   ("C-c p h" . cape-history)
-	   ("C-c p f" . cape-file)
-	   ("C-c p k" . cape-keyword)
-	   ("C-c p s" . cape-elisp-symbol)
-	   ("C-c p e" . cape-elisp-block)
-	   ("C-c p a" . cape-abbrev)
-	   ("C-c p l" . cape-line)
-	   ("C-c p w" . cape-dict)
-	   ("C-c p :" . cape-emoji)
-	   ("C-c p \\" . cape-tex)
-	   ("C-c p _" . cape-tex)
-	   ("C-c p ^" . cape-tex)
-	   ("C-c p &" . cape-sgml)
-	   ("C-c p r" . cape-rfc1345))
+  	 ("C-c p t" . tempel-complete)
+  	 ("C-c p g" . complete-tag)        ;; etags
+  	 ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+  	 ("C-c p h" . cape-history)
+  	 ("C-c p f" . cape-file)
+  	 ("C-c p k" . cape-keyword)
+  	 ("C-c p s" . cape-elisp-symbol)
+  	 ("C-c p e" . cape-elisp-block)
+  	 ("C-c p a" . cape-abbrev)
+  	 ("C-c p l" . cape-line)
+  	 ("C-c p w" . cape-dict)
+  	 ("C-c p :" . cape-emoji)
+  	 ("C-c p \\" . cape-tex)
+  	 ("C-c p _" . cape-tex)
+  	 ("C-c p ^" . cape-tex)
+  	 ("C-c p &" . cape-sgml)
+  	 ("C-c p r" . cape-rfc1345))
     :init
     ;; Add to the global default value of `completion-at-point-functions' which is
     ;; used by `completion-at-point'.  The order of the functions matters, the
@@ -536,7 +327,12 @@ has several helpful examples to get started: https://github.com/minad/corfu
     ;;(add-to-list 'completion-at-point-functions #'cape-dict)
     ;; (add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
     ;;(add-to-list 'completion-at-point-functions #'cape-line)
-  )
+
+    ;; Allows you to use fuzzyfinding by pressing space
+    ;; (keymap-set corfu-map "SPC" 'corfu-insert-separator)
+
+    (setq corfu-auto t)
+    )
 #+end_src
 
 Template management with tempel
@@ -547,7 +343,7 @@ Template management with tempel
     ;; (tempel-trigger-prefix "<")
 
     :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-	   ("M-*" . tempel-insert))
+    	 ("M-*" . tempel-insert))
 
     :init
 
@@ -561,8 +357,8 @@ Template management with tempel
       ;; `tempel-expand' *before* the main programming mode Capf, such
       ;; that it will be tried first.
       (setq-local completion-at-point-functions
-		  (cons #'tempel-expand
-			completion-at-point-functions)))
+    		(cons #'tempel-expand
+    		      completion-at-point-functions)))
 
     (add-hook 'conf-mode-hook 'tempel-setup-capf)
     (add-hook 'prog-mode-hook 'tempel-setup-capf)
@@ -573,6 +369,108 @@ Template management with tempel
     (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
     (global-tempel-abbrev-mode)
     )
+#+end_src
+
+* Org
+
+** Base org setup
+
+Inspired by [[https:https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[https:https://www.labri.fr/perso/nrougier/GTD/index.html][N. Rougier]]
+
++ Add tasks with org-capture.
++ Sort your inbox with org-refile.
++ Groom your backlog with org-todo.
++ Plan your projects with org-schedule.
++ Get things done with org-agenda.
+
+#+begin_src emacs-lisp
+  (use-package org
+    :config
+    (setq org-todo-keywords
+  	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c@/!)")))
+    (setq org-log-done 'time))
+
+  (use-package org-modern
+    :config
+    (setq org-modern-todo-faces
+  	'(("NEXT" :foreground "purple" :weight bold :background "orange")))
+    (global-org-modern-mode))
+
+
+  ;; Allow moving task from anywhere into your projects:
+  (setq org-refile-targets '(("~/org/projects.org" :maxlevel . 1)))
+
+  ;; Automatically save org files after refile
+  (advice-add 'org-refile :after (lambda (&rest _) (org-save-all-org-buffers)))
+
+  ;; Setup capture template to write new tasks to ~/org/inbox.org
+  (setq org-capture-templates
+        '(("t" "todo" entry (file "~/org/inbox.org")
+           "* TODO %?\n/Entered on/ %U\n")))
+
+  ;; Press F6 to capture a task
+  (global-set-key (kbd "<f6>") 'org-capture)
+#+end_src
+
+** Org agenda
+
+#+begin_src emacs-lisp
+  ;; org-agenda provides the GTD dashboard
+  (use-package org-agenda
+    :ensure nil
+    :config
+    ;; The agenda pulls data from the following files:
+    (setq org-agenda-files '("~/org/projects.org" "~/org/inbox.org"))
+
+    ;; The GTD view
+    (setq-default org-agenda-custom-commands
+      		'(("g" "Get Things Done (GTD)"
+      		   ((agenda ""
+      			    ((org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
+      			     (org-deadline-warning-days 0)))
+      		    (todo "NEXT"
+      			  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
+      			   (org-agenda-prefix-format "  %i %-12:c [%e] ")
+      			   (org-agenda-overriding-header "\nTasks\n")))
+      		    (tags-todo "inbox"
+      			       ((org-agenda-prefix-format "  %?-12t% s")
+      				(org-agenda-overriding-header "\nInbox\n")))
+      		    (tags "CLOSED>=\"<today>\""
+      			  ((org-agenda-overriding-header "\nCompleted today\n")))))))
+
+    ;; Press F4 to get things done!
+    (global-set-key (kbd "<f4>") (lambda () (interactive) (org-agenda nil "g"))))
+
+  ;; Add a new org-capture 'j' for journaling
+  (add-to-list 'org-capture-templates
+  	     '("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+  	       "* %?\n")
+  	     t)
+
+
+  ;; From: https://stackoverflow.com/a/70131908
+  ;; With auto save disabled
+  (defun org-archive-done-tasks ()
+    "Archive all tasks marked DONE in the file."
+    (interactive)
+    ;; Disable auto save to avoid repeated file write.
+    (setq org-archive-subtree-save-file-p nil)
+    ;; unwind-protect is like try/finally
+    (unwind-protect
+        ;; process the entry in reverse to avoid changes in positioning
+        (mapc (lambda(entry)
+                (goto-char entry)
+                (org-archive-subtree))
+              (reverse (org-map-entries (lambda () (point)) "TODO=\"DONE\"" 'file)))
+      ;; Enable auto save, even if an exception is raised.
+      (setq org-archive-subtree-save-file-p t))
+    (org-save-all-org-buffers))
+
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+  	(todo   . " ")
+  	(tags   . " %i %-12:c")
+  	(search . " %i %-12:c")))
 #+end_src
 
 * Project management
@@ -618,6 +516,13 @@ Just testing out web-mode for now... may pivot.
 #+end_src
 
 * Editing
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :bind
+    (("C->" . 'mc/mark-next-like-this)
+     ("C-<" . 'mc/mark-previous-like-this)))
+#+end_src
+
 ** Generic
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
@@ -626,20 +531,20 @@ Just testing out web-mode for now... may pivot.
 
 ** Lisp
 #+begin_src emacs-lisp
-    (use-package paredit
-      :magic ("%Geiser" . paredit-mode)
-      :hook ((scheme-mode . paredit-mode)
-	     (lisp-mode . paredit-mode)
-	     (emacs-lisp-mode . paredit-mode)
-	     (racket-mode . paredit-mode)
-	     ;; (racket-repl-mode . paredit-mode)
-	     ))
-    (advice-add 'paredit-RET
-		:after
-		(lambda ()
-		  (when (string-prefix-p "*Racket REPL"
-					 (buffer-name (current-buffer)))
-		    (newline))))
+  (use-package paredit
+    :magic ("%Geiser" . paredit-mode)
+    :hook ((scheme-mode . paredit-mode)
+  	 (lisp-mode . paredit-mode)
+  	 (emacs-lisp-mode . paredit-mode)
+  	 (racket-mode . paredit-mode)
+  	 ;; (racket-repl-mode . paredit-mode)
+  	 ))
+  (advice-add 'paredit-RET
+  	    :after
+  	    (lambda ()
+  	      (when (string-prefix-p "*Racket REPL"
+  				     (buffer-name (current-buffer)))
+  		(newline))))
 #+end_src
 
 * File modes
@@ -662,16 +567,7 @@ Emacs/)
     :mode "\\.epub\\'"
     :config
     (setq nov-unzip-program (executable-find "bsdtar")
-	  nov-unzip-args '("-xC" directory "-f" filename)))
-#+end_src
-
-* Utility Packages
-
-~which-key~ is now installed by default in emacs 30!
-#+begin_src emacs-lisp
-  ;; (use-package which-key
-  ;;   :config (which-key-mode))
-  (which-key-mode)
+  	nov-unzip-args '("-xC" directory "-f" filename)))
 #+end_src
 
 * tree-sitter
@@ -679,24 +575,24 @@ Emacs/)
 https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
 #+begin_src emacs-lisp
   (setq treesit-language-source-alist
-	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
-	  (c "https://github.com/tree-sitter/tree-sitter-c")
-	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-	  (cmake "https://github.com/uyha/tree-sitter-cmake")
-	  (css "https://github.com/tree-sitter/tree-sitter-css")
-	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	  (go "https://github.com/tree-sitter/tree-sitter-go")
-	  (html "https://github.com/tree-sitter/tree-sitter-html")
-	  (java "https://github.com/tree-sitter/tree-sitter-java")
-	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-	  (json "https://github.com/tree-sitter/tree-sitter-json")
-	  (make "https://github.com/alemuller/tree-sitter-make")
-	  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-	  (python "https://github.com/tree-sitter/tree-sitter-python")
-	  (toml "https://github.com/tree-sitter/tree-sitter-toml")
-	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-	  (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+  	(c "https://github.com/tree-sitter/tree-sitter-c")
+  	(cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+  	(cmake "https://github.com/uyha/tree-sitter-cmake")
+  	(css "https://github.com/tree-sitter/tree-sitter-css")
+  	(elisp "https://github.com/Wilfred/tree-sitter-elisp")
+  	(go "https://github.com/tree-sitter/tree-sitter-go")
+  	(html "https://github.com/tree-sitter/tree-sitter-html")
+  	(java "https://github.com/tree-sitter/tree-sitter-java")
+  	(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+  	(json "https://github.com/tree-sitter/tree-sitter-json")
+  	(make "https://github.com/alemuller/tree-sitter-make")
+  	(markdown "https://github.com/ikatyang/tree-sitter-markdown")
+  	(python "https://github.com/tree-sitter/tree-sitter-python")
+  	(toml "https://github.com/tree-sitter/tree-sitter-toml")
+  	(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+  	(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+  	(yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 #+end_src
 
 Run the following command to install a treesitter lang from the above
@@ -710,10 +606,10 @@ Use the treesitter mode instead of the default major mode (I think
 that you still have access to the default major mode utilities).
 #+begin_src emacs-lisp
   (setq major-mode-remap-alist
-	'((python-mode . python-ts-mode)
-	  (java-mode . java-ts-mode)
-	  (c-mode . c-ts-mode)
-	  (cpp-mode . cpp-ts-mode)))
+        '((python-mode . python-ts-mode)
+  	(java-mode . java-ts-mode)
+  	(c-mode . c-ts-mode)
+  	(cpp-mode . cpp-ts-mode)))
 
 #+end_src
 
@@ -727,8 +623,8 @@ that you still have access to the default major mode utilities).
     (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
     (add-hook 'go-ts-mode-hook (lambda () (setq tab-width 4)))
     (add-hook 'go-ts-mode-hook (lambda ()
-  				 (add-hook 'before-save-hook 'eglot-ensure t t)
-  				 (add-hook 'before-save-hook 'eglot-format-buffer t t)))
+  			       (add-hook 'before-save-hook 'eglot-ensure t t)
+  			       (add-hook 'before-save-hook 'eglot-format-buffer t t)))
     :config
     (setq go-ts-mode-indent-offset 4)
     ;; :hook
@@ -757,37 +653,48 @@ broadly related to my data work here. I may move it later.
   (use-package micromamba)
 #+end_src
 
-* Key bindings
-
-For now, all of my key bindings will be here... this might go out of
-control -- we'll see.
+* Testing Ground
 
 #+begin_src emacs-lisp
-  (keymap-global-set "M-o" 'other-window)  
+  (use-package gptel
+    :config
+    (setq
+     gptel-model 'qwen2.5-coder:14b
+     gptel-backend (gptel-make-ollama "Ollama"
+                     :host "127.0.0.1:11434"
+                     :stream t
+                     :models '(qwen2.5-coder:14b))))
 #+end_src
+
 
 * Theme
 
 I want /all/ of my theme stuff to be located here, with the exception
 of some basic core configuration located above.
 
-I am currently using gruvbox themes, but am interested in material
-themes and am also interested in creating my own.
+I am currently using gruvbox themes, but enjoy the material and nano
+themes. I might make my own eventually...
+
 #+begin_src emacs-lisp
   (use-package gruvbox-theme)
 
   ;; this should probably be based on the dpi or something? (note: check
   ;; out the code for ~org--get-display-dpi~)
   (set-face-attribute 'default nil :height 210)
+  (set-frame-font "Iosevka" nil t)
   (toggle-frame-maximized)
+
+
+
 
   ;; define a helper function for switching between my light/dark theme
   (defun cjl/refresh-theme ()
     (interactive)
     (let ((hour (decoded-time-hour (decode-time (float-time)))))
       (if (and (>= hour 8) (<= hour 19))
-      (load-theme 'gruvbox-light-medium t)
-    (load-theme 'gruvbox-dark-medium t))))
+  	(load-theme 'modus-operandi t)
+  					; (load-theme 'gruvbox-light-medium t)
+        (load-theme 'modus-vivendi-tinted t))))
 
   ;; call it on emacs start
   (cjl/refresh-theme)
@@ -796,4 +703,3 @@ themes and am also interested in creating my own.
   ;; (run-at-time "12:00am" "30 minutes" #'cjl/refresh-theme)
   (run-at-time 0 (* 30 60) #'cjl/refresh-theme)
 #+end_src
-
