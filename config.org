@@ -375,7 +375,7 @@ Template management with tempel
 
 ** Base org setup
 
-Inspired by [[https:https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[https:https://www.labri.fr/perso/nrougier/GTD/index.html][N. Rougier]]
+Inspired by [[https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[https://www.labri.fr/perso/nrougier/GTD/index.html][N. Rougier]]
 
 + Add tasks with org-capture.
 + Sort your inbox with org-refile.
@@ -387,13 +387,21 @@ Inspired by [[https:https://midirus.com/emacs/tutorial#clipboard][midirus]] and 
   (use-package org
     :config
     (setq org-todo-keywords
-  	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c@/!)")))
-    (setq org-log-done 'time))
+    	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c@/!)")))
+    (setq org-log-done 'time)
+    ;; setup the inbox and projects files and append the header
+    (let ((dir "~/org"))
+      (dolist (f (list "projects.org" "inbox.org"))
+        (let ((full-file (format "%s/%s" dir f)))
+  	(unless (file-exists-p full-file)
+  	  (dired-create-empty-file full-file)
+  	  (when (string-equal "inbox.org" f)
+  	    (write-region "FILETAGS: inbox" nil full-file 'append)))))))
 
   (use-package org-modern
     :config
     (setq org-modern-todo-faces
-  	'(("NEXT" :foreground "purple" :weight bold :background "orange")))
+    	'(("NEXT" :foreground "purple" :weight bold :background "orange")))
     (global-org-modern-mode))
 
 
