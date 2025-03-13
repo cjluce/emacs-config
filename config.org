@@ -414,7 +414,12 @@ Inspired by [[https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[http
   ;; Setup capture template to write new tasks to ~/org/inbox.org
   (setq org-capture-templates
         '(("t" "todo" entry (file "~/org/inbox.org")
-           "* TODO %?\n/Entered on/ %U\n")))
+           "* TODO %?\n/Entered on/ %U\n")
+  	("m" "Meeting Notes" entry
+  	 (file+datetree "~/org/meetings.org")
+  	 "* %?\n%U\n")))
+
+  (setq org-archive-location "~/org/meetings-archive::datetree/")
 
   ;; Press F6 to capture a task
   (global-set-key (kbd "<f6>") 'org-capture)
