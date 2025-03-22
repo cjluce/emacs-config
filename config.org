@@ -432,18 +432,9 @@ Inspired by [[https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[http
   (use-package org-agenda
     :ensure nil
     :config
-    ;; The agenda pulls data from the following files:
-    ;; (setq org-agenda-files '("~/org/projects.org" "~/org/inbox.org"))
+    (setq org-agenda-files '("~/org"))
 
-    (setq org-agenda-files (directory-files-recursively "~/org/"
-  						      ".*.org$"
-  						      nil
-  						      (lambda (file-name)
-  							(if (string-search "/." file-name)
-  							    nil
-  							  t))))
-
-    ;; The GTD view
+    ;; ;; The GTD view
     (setq-default org-agenda-custom-commands
       		'(("g" "Get Things Done (GTD)"
       		   ((agenda ""
