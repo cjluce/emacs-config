@@ -1,11 +1,5 @@
 * TODOs
-
 ** TODO Reorganize into more useful sections
-
-
-* Installation
-
-I recommend restarting emacs after install.
 
 * Base
 
@@ -95,7 +89,6 @@ This is my version of "sensible defaults."
   (add-hook 'prog-mode-hook 'subword-mode)
 
 #+end_src
-
 
 * Completion engine
 
@@ -372,7 +365,6 @@ Template management with tempel
 #+end_src
 
 * Org
-
 ** Base org setup
 
 Inspired by [[https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[https://www.labri.fr/perso/nrougier/GTD/index.html][N. Rougier]]
@@ -402,6 +394,7 @@ Inspired by [[https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[http
     :config
     (setq org-modern-todo-faces
     	'(("NEXT" :foreground "purple" :weight bold :background "orange")))
+    (setq org-modern-hide-stars " ")
     (global-org-modern-mode))
 
 
@@ -447,6 +440,9 @@ Inspired by [[https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[http
       		    (tags-todo "inbox"
       			       ((org-agenda-prefix-format "  %?-12t% s")
       				(org-agenda-overriding-header "\nInbox\n")))
+  		    (tags-todo "projects"
+      			       ((org-agenda-prefix-format "  %?-12t% s")
+      				(org-agenda-overriding-header "\nProjects\n")))
       		    (tags "CLOSED>=\"<today>\""
       			  ((org-agenda-overriding-header "\nCompleted today\n")))))))
 
@@ -678,7 +674,6 @@ broadly related to my data work here. I may move it later.
                      :models '(qwen2.5-coder:14b))))
 #+end_src
 
-
 * Theme
 
 I want /all/ of my theme stuff to be located here, with the exception
@@ -695,9 +690,6 @@ themes. I might make my own eventually...
   (set-face-attribute 'default nil :height 210)
   (set-frame-font "Iosevka" nil t)
   (toggle-frame-maximized)
-
-
-
 
   ;; define a helper function for switching between my light/dark theme
   (defun cjl/refresh-theme ()

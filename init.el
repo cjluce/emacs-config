@@ -29,6 +29,7 @@ Otherwise, just yield the init file.")
      default))
  '(gptel-api-key
    "AAAAC3NzaC1lZDI1NTE5AAAAID+wv3T2nsruX87fIaxnwGNYcx4A07LIk3SU/zj4vz9j")
+ '(ns-right-alternate-modifier 'none)
  '(package-selected-packages
    '(cape corfu corfu-terminal emacs-reformatter embark-consult
 	  exec-path-from-shell expand-region gptel gptel-mode
@@ -43,3 +44,4 @@ Otherwise, just yield the init file.")
  ;; If there is more than one, they won't work right.
  )
 (put 'upcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
