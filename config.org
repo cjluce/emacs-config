@@ -388,7 +388,9 @@ Inspired by [[https://midirus.com/emacs/tutorial#clipboard][midirus]] and [[http
   	(unless (file-exists-p full-file)
   	  (dired-create-empty-file full-file)
   	  (when (string-equal "inbox.org" f)
-  	    (write-region "FILETAGS: inbox" nil full-file 'append)))))))
+  	    (write-region "#+STARTUP: content showstars indent\n#+FILETAGS: inbox" nil full-file 'append))
+  	  (when (string-equal "projects.org" f)
+  	    (write-region "#+STARTUP: content showstars indent\n#+FILETAGS: projects" nil full-file 'append)))))))
 
   (use-package org-modern
     :config
