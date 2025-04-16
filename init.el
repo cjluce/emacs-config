@@ -29,12 +29,16 @@ Otherwise, just yield the init file.")
      default))
  '(gptel-api-key
    "AAAAC3NzaC1lZDI1NTE5AAAAID+wv3T2nsruX87fIaxnwGNYcx4A07LIk3SU/zj4vz9j")
+ '(org-modern-hide-stars " ")
  '(package-selected-packages
    '(cape corfu corfu-terminal emacs-reformatter embark-consult
 	  exec-path-from-shell expand-region gptel gptel-mode
 	  gruvbox-theme lua-mode magit marginalia micromamba mugur
 	  multiple-cursors nov orderless org-agenda org-modern paredit
-	  pdf-tools rainbow-delimiters tempel vertico vterm web-mode))
+	  pdf-tools rainbow-delimiters sqlformat tempel vertico vterm
+	  web-mode))
+ '(sqlformat-args nil)
+ '(sqlformat-command 'sqlfluff)
  '(warning-suppress-log-types '((gptel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
