@@ -1,0 +1,80 @@
+;;; cjl-core.el --- Core configuration that I can't live without  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; 
+
+(require 'package)
+;;; Code:
+
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+
+(setq use-package-always-ensure t)
+
+(auto-insert-mode 1)
+
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-splash-screen t)
+(setq initial-buffer-choice t)
+(electric-pair-mode 1)
+
+(setq use-short-answers t)
+
+(when (eq system-type 'darwin)
+  (setq ns-use-native-fullscreen t
+ 	mac-right-command-modifier 'meta
+ 	mac-left-command-modifier 'meta
+ 	mac-option-key-is-meta nil
+ 	mac-command-key-is-meta t
+ 	mac-command-modifier 'meta
+ 	mac-option-modifier 'super
+ 	mac-use-title-bar nil))
+
+(setq
+ backup-by-copying t                    ; don't clobber symlinks
+ backup-directory-alist
+ '(("." . "~/.emacs-saves/"))           ; don't litter my fs tree
+ delete-old-versions t
+ kept-new-versions 6
+ kept-old-versions 2
+ version-control t)       ; use versioned backups
+
+
+(use-package exec-path-from-shell
+  :config (exec-path-from-shell-initialize))
+
+(use-package savehist
+  :ensure nil
+  :init (savehist-mode 1))
+
+(use-package saveplace
+  :ensure nil
+  :init (save-place-mode 1))
+
+(use-package winner
+  :ensure nil
+  :init (winner-mode 1))
+
+(use-package which-key
+  :ensure nil
+  :init (which-key-mode 1))
+
+(autoload 'zap-up-to-char "misc"
+  "Kill up to, but not including ARGth occurrence of CHAR." t)
+
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+(keymap-global-set "M-o" 'other-window)
+
+(setq save-interprogram-paste-before-kill t
+      apropos-do-all t
+      require-final-newline t
+      load-prefer-newer t)
+
+
+
+(provide 'cjl-core)
+
+;;; cjl-core.el ends here
