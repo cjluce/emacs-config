@@ -30,7 +30,10 @@
   ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
   ;; any key that calls Puni commands, it's loaded.
   (puni-global-mode)
-  (add-hook 'term-mode-hook #'puni-disable-puni-mode)) ;; may need to exclude EAT as well
+  (add-hook 'term-mode-hook #'puni-disable-puni-mode)
+  :bind (:map puni-mode-map
+              ("M-s" . puni-splice)
+	      ("M-(" . puni-wrap-round))) ;; may need to exclude EAT as well
 
 
 (provide 'cjl-editing)
