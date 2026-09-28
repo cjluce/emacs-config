@@ -20,14 +20,14 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-(use-package gptel
-  :config
-  (setq gptel-model 'qwen3:14b
-        gptel-backend
-        (gptel-make-ollama "Ollama"
-          :host "localhost:11434"
-          :stream t
-          :models '(qwen3:14b))))
+;; (use-package gptel
+;;   :config
+;;   (setq gptel-model 'qwen3:14b
+;;         gptel-backend
+;;         (gptel-make-ollama "Ollama"
+;;           :host "localhost:11434"
+;;           :stream t
+;;           :models '(qwen3:14b))))
 
 (provide 'cjl-dev)
 

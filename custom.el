@@ -6,8 +6,9 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(cape consult corfu eat embark embark-consult exec-path-from-shell
-	  expand-region gptel gruvbox-theme jinx magit marginalia
-	  orderless org-modern puni tempel treesit-auto vertico))
+	  expand-region gruvbox-theme jinx magit marginalia
+	  multiple-cursors orderless org-modern puni tempel
+	  treesit-auto vertico))
  '(ring-bell-function 'ignore))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
