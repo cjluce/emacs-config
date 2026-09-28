@@ -72,6 +72,11 @@
       require-final-newline t
       load-prefer-newer t)
 
+(defun cjl-open-emacs-config ()
+  "Open my Emacs configuration."
+  (interactive)
+  (find-file user-init-file))
+
 (provide 'cjl-core)
 
 ;;; cjl-core.el ends here

@@ -55,6 +55,50 @@
 ;; Press F6 to capture a task
 (global-set-key (kbd "<f6>") 'org-capture)
 
+;; Make org less pretty when inspecting
+(use-package org-appear
+  :hook (org-mode . org-appear-mode)
+  :custom
+  (org-appear-autolinks t)
+  (org-appear-autoentities t)
+  (org-appear-autosubmarkers t))
+(setq org-hide-emphasis-markers t
+      org-pretty-entities t)
+(setq org-link-descriptive t)
+(setq org-fold-catch-invisible-edits 'show-and-error)
+
+(defvar-local cjl-org--revealed-region nil)
+
+(defun cjl-org-reveal-region ()
+  ;; Restore the previously revealed region.
+  (when cjl-org--revealed-region
+    (font-lock-flush
+     (car cjl-org--revealed-region)
+     (cdr cjl-org--revealed-region))
+    (font-lock-ensure
+     (car cjl-org--revealed-region)
+     (cdr cjl-org--revealed-region))
+    (setq cjl-org--revealed-region nil))
+
+  ;; Reveal raw Org markup in the active region.
+  (when (and (derived-mode-p 'org-mode)
+             (use-region-p))
+    (let ((beg (region-beginning))
+          (end (region-end))
+          (inhibit-read-only t))
+      (with-silent-modifications
+        (remove-text-properties
+         beg end
+         '(display nil
+           invisible nil)))
+      (setq cjl-org--revealed-region
+            (cons beg end)))))
+
+(add-hook 'post-command-hook #'cjl-org-reveal-region)
+
+(add-hook 'post-command-hook #'cjl-org-reveal-region)
+
+
 (provide 'cjl-org)
 
 ;;; cjl-org.el ends here
