@@ -6,7 +6,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(ajrepl cape consult corfu eat embark embark-consult
-	    exec-path-from-shell expand-region gptel gruvbox-theme
+	    exec-path-from-shell expand-region gruvbox-theme
 	    janet-mode janet-ts-mode jinx magit marginalia
 	    multiple-cursors orderless org-appear org-modern puni
 	    racket-mode tempel treesit-auto vertico))
